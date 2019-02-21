@@ -14,6 +14,7 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
+    handlerInput.attributesManager.setSessionAttributes({ "key": "value"});
     return handlerInput.responseBuilder
       .speak('Welcome to pet match. I can help you find the best dog for you. '+
         'What are two things you are looking for in a dog?')
@@ -166,6 +167,7 @@ const ExitHandler = {
   handle(handlerInput) {
     return handlerInput.responseBuilder
       .speak('Bye')
+      .withShouldEndSession(true)
       .getResponse();
   },
 };
