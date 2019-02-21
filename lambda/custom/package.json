@@ -23,6 +23,7 @@
     "ask-sdk-model": "^1.0.0"
   },
   "devDependencies": {
-    "jest": "^24.1.0"
+    "jest": "^24.1.0",
+    "virtual-alexa": "0.7.0"
   }
 }
