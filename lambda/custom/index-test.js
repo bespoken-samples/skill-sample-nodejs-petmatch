@@ -3,13 +3,13 @@ const { VirtualAlexa } = require("virtual-alexa");
 describe("test skill", () => {
     let alexa;
     beforeEach(() => {
-		alexa = new VirtualAlexa.Builder()
-			.handler("index.js")
-			.interactionModelFile("../../models/en-US.json")
-			.create();
+        alexa = new VirtualAlexa.Builder()
+            .handler("index.js")
+            .interactionModelFile("../../models/en-US.json")
+            .create();
     });
 
-    test.only("Basic dialog", async (done) => {
+    test("Basic dialog", async (done) => {
         let response = await alexa.launch();
         expect(response.prompt()).toContain("Welcome to pet match");
         response = await alexa.request().intent("PetMatchIntent").slot("size", "small").send();
@@ -37,14 +37,14 @@ describe("test skill", () => {
     test("Launch and end", async (done) => {
         let response = await alexa.launch();
         response = await alexa.endSession();
-        expect(response).toBeUndefined();
+        expect(response.prompt()).toBeUndefined();
         done();
     });
 
     test("Disambiguation of slot value (multiple entities resolved)", async (done) => {
         let response = await alexa.launch();
         expect(response.prompt()).toContain("Welcome to pet match");
-        response = await alexa.call(alexa.request().intent("PetMatchIntent").slot("size", "mini"));
+        response = await alexa.request().intent("PetMatchIntent").slot("size", "mini").send();
         expect(response.prompt()).toContain("Which would you like   small  or tiny?");
         done();
     });
@@ -52,7 +52,7 @@ describe("test skill", () => {
     test("Invalid slot value (entity cannot be resolved)", async (done) => {
         let response = await alexa.launch();
         expect(response.prompt()).toContain("Welcome to pet match");
-        response = await alexa.call(alexa.request().intent("PetMatchIntent").slot("size", "grandiose"));
+        response = await alexa.request().intent("PetMatchIntent").slot("size", "grandiose").send();
         expect(response.prompt()).toContain("What size are you looking for");
         done();
     });
