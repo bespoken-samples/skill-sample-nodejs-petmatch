@@ -64,3 +64,5 @@ typings/
 .idea
 
 .DS_Store
+
+test/results

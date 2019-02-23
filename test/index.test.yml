@@ -1,0 +1,52 @@
+#=====================================================================================================================
+#     ______    _ ____  ______        __  _
+#    / __/ /__ (_) / / /_  __/__ ___ / /_(_)__  ___ _
+#   _\ \/  '_// / / /   / / / -_|_-</ __/ / _ \/ _ `/
+#  /___/_/\_\/_/_/_/   /_/  \__/___/\__/_/_//_/\_, /
+#                                             /___/
+#
+# Created by Bespoken
+# Learn more at https://read.bespoken.io/unit-testing/getting-started/
+#
+# Skill name: "Pet Match" by Amazon
+# Test scope: LaunchRequest, PetMatchIntent, AMAZON.HelpIntent, AMAZON.StopIntent, AMAZON.CancelIntent
+# Description: General test suite for all intents
+#=====================================================================================================================
+
+---
+configuration:
+  locale: en-US
+
+---
+- test: Launch request, no further interaction
+- LaunchRequest:
+  - prompt: Welcome to pet match
+  - reprompt: What size and temperament are you looking for in a dog
+  - sessionEnded: false
+
+---
+- test: Simple utterance, no slot value provided
+- PetMatchIntent: # Confirm the skill is pushed into the dialog interaction
+  - response.directives[0].type: "Dialog.Delegate"
+- AMAZON.StopIntent: Bye
+
+---
+- test: Complete dialog sequence, starting with energy
+- PetMatchIntent pet=dog energy=high size=small temperament=guard: 
+  - request.request.dialogState: COMPLETED   
+  - prompt: So a small guard hig energy dog sounds good for you. Consider a toy fox terrier
+- SessionEndedRequest:
+  - response.outputSpeech: undefined
+
+---
+- test: Disambiguation of slots
+- LaunchRequest
+- PetMatchIntent size=mini: Which would you like   small  or tiny?
+- PetMatchIntent size=small temperament=guard energy=low:
+    - request.request.dialogState: COMPLETED 
+    - prompt: So a small guard low energy dog sounds good for you. Consider a miniature snouser
+
+---
+- test: No matching slots
+- LaunchRequest
+- PetMatchIntent size=dummy: What size are you looking for
