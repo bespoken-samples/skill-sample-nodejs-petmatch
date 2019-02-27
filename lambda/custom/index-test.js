@@ -12,7 +12,10 @@ describe("test skill", () => {
     test("Basic dialog", async (done) => {
         let response = await alexa.launch();
         expect(response.prompt()).toContain("Welcome to pet match");
-        response = await alexa.request().intent("PetMatchIntent").slot("size", "small").send();
+        response = await alexa.request()
+            .intent("PetMatchIntent")
+            .slot("size", "small")
+            .send();
         
         let request = await alexa.request()
             .intent("PetMatchIntent")
